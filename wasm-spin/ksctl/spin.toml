@@ -1,0 +1,40 @@
+spin_manifest_version = "1"
+authors = ["Dipankar Das <dipankardas0115@gmail.com>"]
+description = "kubesimplify ksctl project in WASM!"
+name = "ksctl"
+trigger = { type = "http", base = "/" }
+version = "0.1.0"
+
+[[component]]
+id = "ksctl"
+source = "target/wasm32-wasi/release/ksctl.wasm"
+allowed_http_hosts = []
+
+[component.trigger]
+route = "/"
+
+[component.build]
+command = "cargo build --target wasm32-wasi --release"
+watch = ["src/**/*.rs", "Cargo.toml"]
+
+[[component]]
+id = "create-cluster"
+source = "create-cluster/target/wasm32-wasi/release/create_cluster.wasm"
+allowed_http_hosts = []
+[component.trigger]
+route = "/create"
+[component.build]
+command = "cargo build --target wasm32-wasi --release"
+workdir = "create-cluster"
+watch = ["create-cluster/src/**/*.rs", "create-cluster/Cargo.toml"]
+
+[[component]]
+id = "delete-cluster"
+source = "delete-cluster/target/wasm32-wasi/release/delete_cluster.wasm"
+allowed_http_hosts = []
+[component.trigger]
+route = "/delete"
+[component.build]
+command = "cargo build --target wasm32-wasi --release"
+workdir = "delete-cluster"
+watch = ["delete-cluster/src/**/*.rs", "delete-cluster/Cargo.toml"]
