@@ -1,0 +1,16 @@
+spin_manifest_version = "1"
+authors = ["Dipankar Das <dipankardas0115@gmail.com>"]
+description = ""
+name = "chat"
+trigger = { type = "http", base = "/" }
+version = "0.1.0"
+
+[[component]]
+id = "chat"
+source = "target/wasm32-wasi/release/chat.wasm"
+allowed_http_hosts = []
+[component.trigger]
+route = "/..."
+[component.build]
+command = "cargo build --target wasm32-wasi --release"
+watch = ["src/**/*.rs", "Cargo.toml"]
