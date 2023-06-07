@@ -1,16 +1,14 @@
 use bytecodec::DecodeExt;
-// use http_req::request;
-use wasmedge_http_req::request;
+use wasmedge_http_req::request as WasmedgeRequest;
 
 use httpcodec::{HttpVersion, ReasonPhrase, Request, RequestDecoder, Response, StatusCode};
 use std::{io::{Read, Write}, println};
 use wasmedge_wasi_socket::{Shutdown, TcpListener, TcpStream};
 
-const BOT_URL: &str= "https://dipankardas011-gpt2-bot.hf.space/generate";
+const BOT_URL: &str= "http://0.0.0.0:8080/generate";
 const BOT_TEXT_FIELD: &str = "text";
 
 fn handle_http(req: Request<String>) -> bytecodec::Result<Response<String>> {
-    println!("Req.reqtarget -> {:?}",req.request_target());
     let request_path = req.request_target().to_string();
     let request_type = req.method().to_string();
 
@@ -26,11 +24,7 @@ fn handle_http(req: Request<String>) -> bytecodec::Result<Response<String>> {
         }
         ("POST", "/bot") => {
 
-            println!("request target [{request_path}] method [{request_type}]");
             let mod_req: String = req.body().replace(" ", "%20");
-            println!("Data in body: {mod_req}");
-
-
 
             if mod_req.len() as i32 == 0 {
                 Ok(Response::new(
@@ -43,7 +37,7 @@ fn handle_http(req: Request<String>) -> bytecodec::Result<Response<String>> {
                 let bot_uri = format!("{BOT_URL}?{BOT_TEXT_FIELD}={mod_req}");
 
                 let mut writer = Vec::new(); //container for body of a response
-                let res = match request::get(bot_uri, &mut writer) {
+                let res = match WasmedgeRequest::get(bot_uri, &mut writer) {
                     Ok(result) => result,
                     Err(err) => {
                         // Handle the error case here, e.g., log the error and return an appropriate response
@@ -56,12 +50,8 @@ fn handle_http(req: Request<String>) -> bytecodec::Result<Response<String>> {
                         ));
                     }
                 };
-                println!("GET");
-                println!("Status: {} {}", res.status_code(), res.reason());
-                println!("Headers {}", res.headers());
                 let bot_response = String::from_utf8_lossy(&writer);
-
-
+                println!("Resp: {:?}", res);
 
                 Ok(Response::new(
                     HttpVersion::V1_1,
