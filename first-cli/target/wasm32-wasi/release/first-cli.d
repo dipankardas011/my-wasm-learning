@@ -1,1 +1,0 @@
-/home/dipankar/Onedrive/github/wasm_projects/first-cli/target/wasm32-wasi/release/first-cli.wasm: /home/dipankar/Onedrive/github/wasm_projects/first-cli/src/api/mod.rs /home/dipankar/Onedrive/github/wasm_projects/first-cli/src/api/stringer.rs /home/dipankar/Onedrive/github/wasm_projects/first-cli/src/main.rs

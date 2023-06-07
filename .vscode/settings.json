@@ -1,0 +1,5 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./wasmedge_wasi_socket/examples/http_server/Cargo.toml"
+    ]
+}
