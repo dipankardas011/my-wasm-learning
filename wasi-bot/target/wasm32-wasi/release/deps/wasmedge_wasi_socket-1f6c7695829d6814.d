@@ -1,0 +1,10 @@
+/home/dipankar/Onedrive/github/wasm_projects/wasi-bot/target/wasm32-wasi/release/deps/wasmedge_wasi_socket-1f6c7695829d6814.rmeta: /home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/lib.rs /home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/poll.rs /home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/socket.rs /home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/wasi_poll.rs
+
+/home/dipankar/Onedrive/github/wasm_projects/wasi-bot/target/wasm32-wasi/release/deps/libwasmedge_wasi_socket-1f6c7695829d6814.rlib: /home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/lib.rs /home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/poll.rs /home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/socket.rs /home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/wasi_poll.rs
+
+/home/dipankar/Onedrive/github/wasm_projects/wasi-bot/target/wasm32-wasi/release/deps/wasmedge_wasi_socket-1f6c7695829d6814.d: /home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/lib.rs /home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/poll.rs /home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/socket.rs /home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/wasi_poll.rs
+
+/home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/lib.rs:
+/home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/poll.rs:
+/home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/socket.rs:
+/home/dipankar/.cargo/registry/src/github.com-1ecc6299db9ec823/wasmedge_wasi_socket-0.4.3/src/wasi_poll.rs:

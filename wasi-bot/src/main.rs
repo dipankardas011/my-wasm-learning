@@ -1,11 +1,11 @@
 use bytecodec::DecodeExt;
-use wasmedge_http_req::request as WasmedgeRequest;
+use http_req::request;
 
 use httpcodec::{HttpVersion, ReasonPhrase, Request, RequestDecoder, Response, StatusCode};
 use std::{io::{Read, Write}, println};
 use wasmedge_wasi_socket::{Shutdown, TcpListener, TcpStream};
 
-const BOT_URL: &str= "http://0.0.0.0:8080/generate";
+const BOT_URL: &str= "https://dipankardas011-gpt2-bot.hf.space/generate";
 const BOT_TEXT_FIELD: &str = "text";
 
 fn handle_http(req: Request<String>) -> bytecodec::Result<Response<String>> {
@@ -37,27 +37,23 @@ fn handle_http(req: Request<String>) -> bytecodec::Result<Response<String>> {
                 let bot_uri = format!("{BOT_URL}?{BOT_TEXT_FIELD}={mod_req}");
 
                 let mut writer = Vec::new(); //container for body of a response
-                let res = match WasmedgeRequest::get(bot_uri, &mut writer) {
-                    Ok(result) => result,
-                    Err(err) => {
-                        // Handle the error case here, e.g., log the error and return an appropriate response
-                        println!("Error while making the request: {:?}", err);
-                        return Ok(Response::new(
-                            HttpVersion::V1_1,
-                            StatusCode::new(500)?,
-                            ReasonPhrase::new("")?,
-                            format!("Error while making the request."),
-                        ));
-                    }
-                };
+                let res = request::get(bot_uri, &mut writer).unwrap();
                 let bot_response = String::from_utf8_lossy(&writer);
-                println!("Resp: {:?}", res);
-
-                Ok(Response::new(
-                    HttpVersion::V1_1,
-                    StatusCode::new(200)?,
-                    ReasonPhrase::new("")?,
-                    format!("Generated Response {bot_response}")))
+                println!("Status: {} {}", res.status_code(), res.reason());
+                println!("Headers {}", res.headers());
+                if res.status_code() == http_req::response::StatusCode::new(200) {
+                    Ok(Response::new(
+                        HttpVersion::V1_1,
+                        StatusCode::new(200)?,
+                        ReasonPhrase::new("")?,
+                        format!("Generated Response {bot_response}")))
+                } else {
+                    Ok(Response::new(
+                        HttpVersion::V1_1,
+                        StatusCode::new(503)?,
+                        ReasonPhrase::new("")?,
+                        format!("Server side error")))
+                }
             }
         }
         _ => {
