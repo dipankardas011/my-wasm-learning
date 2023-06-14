@@ -5,52 +5,35 @@ use httpcodec::{HttpVersion, ReasonPhrase, Request, RequestDecoder, Response, St
 use std::{io::{Read, Write}, println};
 use wasmedge_wasi_socket::{Shutdown, TcpListener, TcpStream};
 
+use std::sync::Arc;
+use tera::{Tera, Context};
+
 const BOT_URL: &str= "https://dipankardas011-gpt2-bot.hf.space/generate";
 const BOT_TEXT_FIELD: &str = "text";
 
 
-fn render_template(data: &str) -> String {
-    format!(
-        "
-<!DOCTYPE html>
-<html data-bs-theme=\"dark\">
-    <head>
-        <meta charset=\"utf-8\">
-        <title>Rust based GPT-2 bot</title>
-        <link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\" integrity=\"sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T\" crossorigin=\"anonymous\">
-    </head>
-    <body class=\"bg-dark\">
-        <div class=\"container\">
-            <h1 class=\"text-center mt-5 text-white\">Rust based GPT-2 bot</h1>
-            <form action=\"/bot\" method=\"post\" class=\"d-flex flex-column align-items-center\">
-                <label for=\"query\" class=\"mb-2 text-white\">Enter your text:</label>
-                <input type=\"text\" name=\"query\" id=\"query\" class=\"form-control w-100 p-2 mb-4 border border-gray-300 rounded\">
-                <button type=\"submit\" class=\"btn btn-primary w-100 py-2 px-4 text-white rounded\">Get Answer</button>
-            </form>
-            <h2 class=\"text-white\">Answer:</h2>
-            <p class=\"text-white\">{}</p>
-        </div>
-    </body>
-</html>
-        ",
-        data
-    )
-}
-
-
-fn handle_http(req: Request<String>) -> bytecodec::Result<Response<String>> {
+fn handle_http(req: Request<String>, tera: Arc<Tera>) -> bytecodec::Result<Response<String>> {
     let request_path = req.request_target().to_string();
     let request_type = req.method().to_string();
 
+
     return match (request_type.as_str(), request_path.as_str()) {
+
         ("GET", "/") => {
+            let context = Context::new();
+
+            let rendered = tera.render("index.html", &context).unwrap();
+
+            Ok(Response::new(HttpVersion::V1_1, StatusCode::new(200)?, ReasonPhrase::new("")?, format!("{rendered}")))
+        }
+        ("GET", "/ping") => {
 
             println!("request target [{request_path}] method [{request_type}]");
             Ok(Response::new(
                 HttpVersion::V1_1,
                 StatusCode::new(200)?,
                 ReasonPhrase::new("")?,
-                render_template("Backend HEALTHY!")))
+                format!("Pong!!")))
         }
         ("POST", "/bot") => {
 
@@ -61,7 +44,7 @@ fn handle_http(req: Request<String>) -> bytecodec::Result<Response<String>> {
                     HttpVersion::V1_1,
                     StatusCode::new(401)?,
                     ReasonPhrase::new("")?,
-                    render_template("Invalid request no promppt found!")))
+                    format!("Invalid request no promppt found!")))
             }else {
 
                 let bot_uri = format!("{BOT_URL}?{BOT_TEXT_FIELD}={mod_req}");
@@ -76,13 +59,13 @@ fn handle_http(req: Request<String>) -> bytecodec::Result<Response<String>> {
                         HttpVersion::V1_1,
                         StatusCode::new(200)?,
                         ReasonPhrase::new("")?,
-                        render_template(&bot_response)))
+                        format!("Generated Response {bot_response}")))
                 } else {
                     Ok(Response::new(
                         HttpVersion::V1_1,
                         StatusCode::new(503)?,
                         ReasonPhrase::new("")?,
-                        render_template("Server side error")))
+                        format!("Server side error")))
                 }
             }
         }
@@ -92,7 +75,7 @@ fn handle_http(req: Request<String>) -> bytecodec::Result<Response<String>> {
                 HttpVersion::V1_1,
                 StatusCode::new(403)?,
                 ReasonPhrase::new("")?,
-                render_template("Route path or method is invalid!")))
+                format!("Route path or method is invalid!")))
         }
     };
 }
@@ -112,8 +95,9 @@ fn handle_client(mut stream: TcpStream) -> std::io::Result<()> {
     let mut decoder =
         RequestDecoder::<httpcodec::BodyDecoder<bytecodec::bytes::Utf8Decoder>>::default();
 
+    let tera = Arc::new(Tera::new("templates/**/*.html").unwrap());
     let req = match decoder.decode_from_bytes(data.as_slice()) {
-        Ok(req) => handle_http(req),
+        Ok(req) => handle_http(req, tera),
         Err(e) => Err(e),
     };
 

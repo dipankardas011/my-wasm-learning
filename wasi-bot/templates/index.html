@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark">
+    <head>
+        <meta charset="utf-8">
+        <title>Rust based GPT-2 bot</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="/static/main.css">
+    </head>
+    <body class="bg-dark">
+        <div class="container">
+            <h1 class="text-center mt-5 text-white">Rust based GPT-2 bot</h1>
+            <form action="/bot" method="post" class="d-flex flex-column align-items-center">
+                <label for="query" class="mb-2 text-white">Enter your text:</label>
+                <input type="text" name="query" id="query" class="form-control w-100 p-2 mb-4 border border-gray-300 rounded">
+                <button type="submit" class="btn btn-primary w-100 py-2 px-4 text-white rounded">Get Answer</button>
+            </form>
+            {% if data %}
+            <h2 class="text-white">Answer:</h2>
+            <p class="text-white">{{ data }}</p>
+            {% endif %}
+        </div>
+    </body>
+</html>
