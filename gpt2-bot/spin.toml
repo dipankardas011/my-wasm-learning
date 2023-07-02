@@ -1,0 +1,16 @@
+spin_manifest_version = "1"
+authors = ["Dipankar Das <dipankardas0115@gmail.com>"]
+description = ""
+name = "gpt2-bot"
+trigger = { type = "http", base = "/" }
+version = "0.1.0"
+
+[[component]]
+id = "wasi-bot"
+source = "target/wasm32-wasi/release/wasi_bot.wasm"
+allowed_http_hosts = ["dipankardas011-gpt2-bot.hf.space"]
+[component.trigger]
+route = "/..."
+[component.build]
+command = "cargo build --target wasm32-wasi --release"
+watch = ["src/**/*.rs", "Cargo.toml"]
