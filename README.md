@@ -6,6 +6,11 @@
 [Blog link](https://blog.ediri.io/lets-build-a-cli-in-rust)
 
 ## wasi-bot (HTTPS)
+
+> for spin check the gpt2-bot
+
+also its deployed on https://chat-bot-wasm.azurewebsites.net/
+
 > Using wasmedge
 
 ```bash
